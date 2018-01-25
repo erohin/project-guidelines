@@ -1,11 +1,15 @@
 
-[<img src="./images/logo.png">](http://wearehive.co.uk/)
+[中文版](./README-zh.md)
+ | [日本語版](./README-ja.md)
+ | [한국어](./README-ko.md)
+
+[<img src="./images/hive-red-logo.png" width="180" height="180">](http://wearehive.co.uk/)
 
 
 # Project Guidelines &middot; [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 > While developing a new project is like rolling on a green field for you, maintaining it is a potential dark twisted nightmare for someone else.
 Here's a list of guidelines we've found, written and gathered that (we think) works really well with most JavaScript projects here at [hive](http://wearehive.co.uk).
-If you want to share a best practice, or think one of these guidelines  should be removed, [feel free to share it with us](http://makeapullrequest.com).
+If you want to share a best practice, or think one of these guidelines should be removed, [feel free to share it with us](http://makeapullrequest.com).
 - [Git](#git)
     - [Some Git rules](#some-git-rules)
     - [Git workflow](#git-workflow)
@@ -18,6 +22,8 @@ If you want to share a best practice, or think one of these guidelines  should b
 - [Testing](#testing)
 - [Structure and Naming](#structure-and-naming)
 - [Code style](#code-style)
+    - [Some code style guidelines](#code-style-check)
+    - [Enforcing code style standards](#enforcing-code-style-standards)
 - [Logging](#logging)
 - [API](#api)
     - [API design](#api-design)
@@ -27,7 +33,9 @@ If you want to share a best practice, or think one of these guidelines  should b
 
 <a name="git"></a>
 ## 1. Git
+![Git](/images/branching.png)
 <a name="some-git-rules"></a>
+
 ### 1.1 Some Git rules
 There are a set of rules to keep in mind:
 * Perform work in a feature branch.
@@ -42,51 +50,57 @@ There are a set of rules to keep in mind:
 * Never push into `develop` or `master` branch. Make a Pull Request.
     
     _Why:_
-    > It notifies team members that they have completed a feature. It also enables easy peer-review of the code and dedicates forum for discussing the proposed feature
+    > It notifies team members that they have completed a feature. It also enables easy peer-review of the code and dedicates forum for discussing the proposed feature.
 
-* Update your local `develop` branch and do an interactive rebase before pushing your feature and making a Pull Request
+* Update your local `develop` branch and do an interactive rebase before pushing your feature and making a Pull Request.
 
     _Why:_
     > Rebasing will merge in the requested branch (`master` or `develop`) and apply the commits that you have made locally to the top of the history without creating a merge commit (assuming there were no conflicts). Resulting in a nice and clean history. [read more ...](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
 
-* Resolve potential conflicts while rebasing and before making a Pull Request
+* Resolve potential conflicts while rebasing and before making a Pull Request.
 * Delete local and remote feature branches after merging.
     
     _Why:_
-    > It will clutter up your list of branches with dead branches.It insures you only ever merge the branch back into (`master` or `develop`) once. Feature branches should only exist while the work is still in progress.
+    > It will clutter up your list of branches with dead branches. It insures you only ever merge the branch back into (`master` or `develop`) once. Feature branches should only exist while the work is still in progress.
 
 * Before making a Pull Request, make sure your feature branch builds successfully and passes all tests (including code style checks).
     
     _Why:_
-    > You are about to add your code to a stable branch. If your feature-branch tests fail, there is a high chance that your destination branch build will fail too. Additionaly you need to apply code style check before making a Pull Request. It aids readability and reduces the chance of formatting fixes being mingled in with actual changes.
+    > You are about to add your code to a stable branch. If your feature-branch tests fail, there is a high chance that your destination branch build will fail too. Additionally, you need to apply code style check before making a Pull Request. It aids readability and reduces the chance of formatting fixes being mingled in with actual changes.
 
-* Use [this .gitignore file](./.gitignore).
+* Use [this](./.gitignore) `.gitignore` file.
     
     _Why:_
-    > It already has a list of system files that should not be sent with your code into remote repository. In addition, it excludes setting folders and files for mostly used editors, as well as most common dependency folders.
+    > It already has a list of system files that should not be sent with your code into a remote repository. In addition, it excludes setting folders and files for most used editors, as well as most common dependency folders.
 
-* Protect your `develop` and `master` branch .
+* Protect your `develop` and `master` branch.
   
     _Why:_
     > It protects your production-ready branches from receiving unexpected and irreversible changes. read more... [Github](https://help.github.com/articles/about-protected-branches/) and [Bitbucket](https://confluence.atlassian.com/bitbucketserver/using-branch-permissions-776639807.html)
 
 <a name="git-workflow"></a>
 ### 1.2 Git workflow
-Because of most of the reasons above, we use [Feature-branch-workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#feature-branch-workflow) with [Interactive Rebasing](https://www.atlassian.com/git/tutorials/merging-vs-rebasing#the-golden-rule-of-rebasing) and some elements of [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows#gitflow-workflow) (naming and having a develop branch). The main steps are as follow:
+Because of most of the reasons above, we use [Feature-branch-workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#feature-branch-workflow) with [Interactive Rebasing](https://www.atlassian.com/git/tutorials/merging-vs-rebasing#the-golden-rule-of-rebasing) and some elements of [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows#gitflow-workflow) (naming and having a develop branch). The main steps are as follows:
 
-* Checkout a new feature/bug-fix branch
+* For a new project, initialize a git repository in the project directory. __For subsequent features/changes this step should be ignored__.
+   ```sh
+   cd <project directory>
+   git init
+   ```
+
+* Checkout a new feature/bug-fix branch.
     ```sh
     git checkout -b <branchname>
     ```
-* Make Changes
+* Make Changes.
     ```sh
     git add
     git commit -a
     ```
     _Why:_
-    > `git commit -a` will start an editor which lets your separate the subject from the body. Read more about it in *section 1.3*.
+    > `git commit -a` will start an editor which lets you separate the subject from the body. Read more about it in *section 1.3*.
 
-* Sync with remote to get changes you’ve missed
+* Sync with remote to get changes you’ve missed.
     ```sh
     git checkout develop
     git pull
@@ -95,18 +109,18 @@ Because of most of the reasons above, we use [Feature-branch-workflow](https://w
     _Why:_
     > This will give you a chance to deal with conflicts on your machine while rebasing(later) rather than creating a Pull Request that contains conflicts.
     
-* Update your feature branch with latest changes from develop by interactive rebase
+* Update your feature branch with latest changes from develop by interactive rebase.
     ```sh
     git checkout <branchname>
     git rebase -i --autosquash develop
     ```
     
     _Why:_
-    > You can use --autosquash to squash all your commits to a single commit. Nobody wants many commits for a single feature in develop branch [read more...](https://robots.thoughtbot.com/autosquashing-git-commits)
+    > You can use --autosquash to squash all your commits to a single commit. Nobody wants many commits for a single feature in develop branch. [read more...](https://robots.thoughtbot.com/autosquashing-git-commits)
     
-* If you don’t have conflict skip this step. If you have conflicts, [resolve them](https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/)  and continue rebase
+* If you don’t have conflicts, skip this step. If you have conflicts, [resolve them](https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/)  and continue rebase.
     ```sh
-	git add <file1> <file2> ...
+    git add <file1> <file2> ...
     git rebase --continue
     ```
 * Push your branch. Rebase will change history, so you'll have to use `-f` to force changes into the remote branch. If someone else is working on your branch, use the less destructive `--force-with-lease`.
@@ -119,7 +133,7 @@ Because of most of the reasons above, we use [Feature-branch-workflow](https://w
     
     
 * Make a Pull Request.
-* Pull request will be accepted, merged and close by reviewer.
+* Pull request will be accepted, merged and close by a reviewer.
 * Remove your local feature branch if you're done.
 
   ```sh
@@ -135,43 +149,49 @@ Because of most of the reasons above, we use [Feature-branch-workflow](https://w
 
 Having a good guideline for creating commits and sticking to it makes working with Git and collaborating with others a lot easier. Here are some rules of thumb ([source](https://chris.beams.io/posts/git-commit/#seven-rules)):
 
- * Separate the subject from the body with a newline between the two
+ * Separate the subject from the body with a newline between the two.
 
     _Why:_
-    > Git is smart enough to distinguish the first line of your commit message as your summary. In fact, if you try git shortlog, instead of git log, you will see a long list of commit messages, consisting of the id of the commit, and the summary only
+    > Git is smart enough to distinguish the first line of your commit message as your summary. In fact, if you try git shortlog, instead of git log, you will see a long list of commit messages, consisting of the id of the commit, and the summary only.
 
- * Limit the subject line to 50 characters and Wrap the body at 72 characters
+ * Limit the subject line to 50 characters and Wrap the body at 72 characters.
 
     _why_
     > Commits should be as fine-grained and focused as possible, it is not the place to be verbose. [read more...](https://medium.com/@preslavrachev/what-s-with-the-50-72-rule-8a906f61f09c)
 
- * Capitalize the subject line
- * Do not end the subject line with a period
- * Use [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood) in the subject line
+ * Capitalize the subject line.
+ * Do not end the subject line with a period.
+ * Use [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood) in the subject line.
 
     _Why:_
     > Rather than writing messages that say what a committer has done. It's better to consider these messages as the instructions for what is going to be done after the commit is applied on the repository. [read more...](https://news.ycombinator.com/item?id=2079612)
 
 
- * Use the body to explain **what** and **why** as opposed to **how**
+ * Use the body to explain **what** and **why** as opposed to **how**.
 
  <a name="documentation"></a>
 ## 2. Documentation
+
+![Documentation](/images/documentation.png)
+
 * Use this [template](./README.sample.md) for `README.md`, Feel free to add uncovered sections.
 * For projects with more than one repository, provide links to them in their respective `README.md` files.
-* Keep `README.md` updated as project evolves.
+* Keep `README.md` updated as a project evolves.
 * Comment your code. Try to make it as clear as possible what you are intending with each major section.
-* If there is an open discussion on github or stackoverflow about the code or approach you're using, include the link in your comment, 
-* Don't use commenting as an excuse for a bad code. Keep your code clean.
+* If there is an open discussion on github or stackoverflow about the code or approach you're using, include the link in your comment. 
+* Don't use comments as an excuse for a bad code. Keep your code clean.
 * Don't use clean code as an excuse to not comment at all.
 * Keep comments relevant as your code evolves.
 
 <a name="environments"></a>
 ## 3. Environments
+
+![Environments](/images/laptop.png)
+
 * Define separate `development`, `test` and `production` environments if needed.
 
     _Why:_
-    > Different data, tokens, APIs, ports etc... might be needed on different environments. You may want an isolated `development` mode that calls fake API which returns predictable data, making both automated and manually testing much easier. Or you may want to enable Google Analytics only on `production` and so on. [read more...](https://stackoverflow.com/questions/8332333/node-js-setting-up-environment-specific-configs-to-be-used-with-everyauth)
+    > Different data, tokens, APIs, ports etc... might be needed in different environments. You may want an isolated `development` mode that calls fake API which returns predictable data, making both automated and manual testing much easier. Or you may want to enable Google Analytics only on `production` and so on. [read more...](https://stackoverflow.com/questions/8332333/node-js-setting-up-environment-specific-configs-to-be-used-with-everyauth)
 
 
 * Load your deployment specific configurations from environment variables and never add them to the codebase as constants, [look at this sample](./config.sample.js).
@@ -180,7 +200,8 @@ Having a good guideline for creating commits and sticking to it makes working wi
     > You have tokens, passwords and other valuable information in there. Your config should be correctly separated from the app internals as if the codebase could be made public at any moment.
 
     _How:_
-    >Use `.env` files to store your variables and add them to `.gitignore` to be excluded. Instead commit a `.env.example`  which serves as a guide for developers. For production you should still set your environment variables in the standard way.
+    >
+    `.env` files to store your variables and add them to `.gitignore` to be excluded. Instead, commit a `.env.example`  which serves as a guide for developers. For production, you should still set your environment variables in the standard way.
     [read more](https://medium.com/@rafaelvidaurre/managing-environment-variables-in-node-js-2cb45a55195f)
 
 * It’s recommended to validate environment variables before your app starts.  [Look at this sample](./configWithTest.sample.js) using `joi` to validate provided values.
@@ -190,17 +211,17 @@ Having a good guideline for creating commits and sticking to it makes working wi
 
 <a name="consistent-dev-environments"></a>
 ### 3.1 Consistent dev environments:
-* Set your node version in `engines` in `package.json`
+* Set your node version in `engines` in `package.json`.
     
     _Why:_
     > It lets others know the version of node the project works on. [read more...](https://docs.npmjs.com/files/package.json#engines)
 
-* Additionally, use `nvm` and create a  `.nvmrc`  in your project root. Don't forget to mention it in the documentation
+* Additionally, use `nvm` and create a  `.nvmrc`  in your project root. Don't forget to mention it in the documentation.
 
     _Why:_
     > Any one who uses `nvm` can simply use `nvm use` to switch to the suitable node version. [read more...](https://github.com/creationix/nvm)
 
-* It's a good idea to setup a `preinstall` script that checks node and npm versions
+* It's a good idea to setup a `preinstall` script that checks node and npm versions.
 
     _Why:_
     > Some dependencies may fail when installed by newer versions of npm.
@@ -210,7 +231,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
     _Why:_
     > It can give you a consistent environment across the entire workflow. Without much need to fiddle with dependencies or configs. [read more...](https://hackernoon.com/how-to-dockerize-a-node-js-application-4fbab45a0c19)
 
-* Use local modules instead of using globally installed modules
+* Use local modules instead of using globally installed modules.
 
     _Why:_
     > Lets you share your tooling with your colleague instead of expecting them to have it globally on their systems.
@@ -219,7 +240,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
 <a name="consistent-dependencies"></a>
 ### 3.2 Consistent dependencies:
 
-* Make sure your team members get the exact same dependencies as you
+* Make sure your team members get the exact same dependencies as you.
 
     _Why:_
     > Because you want the code to behave as expected and identical in any development machine [read more...](https://medium.com/@kentcdodds/why-semver-ranges-are-literally-the-worst-817cdcb09277)
@@ -235,6 +256,9 @@ Having a good guideline for creating commits and sticking to it makes working wi
 
 <a name="dependencies"></a>
 ## 4. Dependencies
+
+![Github](/images/modules.png)
+
 * Keep track of your currently available packages: e.g., `npm ls --depth=0`. [read more...](https://docs.npmjs.com/cli/ls)
 * See if any of your packages have become unused or irrelevant: `depcheck`. [read more...](https://www.npmjs.com/package/depcheck)
     
@@ -249,7 +273,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
 * Before using a dependency, check to see if it has a good, mature version release frequency with a large number of maintainers: e.g., `npm view async`. [read more...](https://docs.npmjs.com/cli/view)
 
     _Why:_
-    > Having loads of contributors wont be as effective, if maintainers dont merge fixes and patches quickly enough.
+    > Having loads of contributors won't be as effective if maintainers don't merge fixes and patches quickly enough.
 
 * If a less known dependency is needed, discuss it with the team before using it.
 * Always make sure your app works with the latest version of its dependencies without breaking: `npm outdated`. [read more...](https://docs.npmjs.com/cli/outdated)
@@ -262,13 +286,13 @@ Having a good guideline for creating commits and sticking to it makes working wi
 
 <a name="testing"></a>
 ## 5. Testing
-
+![Testing](/images/testing.png)
 * Have a `test` mode environment if needed.
 
     _Why:_
-    > While sometimes end to end testing in `production` mode might seem enough, there are some exceptions: One example is you may not want to enable analytical information on a 'production' mode and pollute someone's dashboard with test data. The other example is that your API may have rate limits in `production` and blocks your test calls after certain amount of requests. 
+    > While sometimes end to end testing in `production` mode might seem enough, there are some exceptions: One example is you may not want to enable analytical information on a 'production' mode and pollute someone's dashboard with test data. The other example is that your API may have rate limits in `production` and blocks your test calls after a certain amount of requests. 
 
-* Place your test files next to the tested modules using `*.test.js` or `*.spec.js` naming convention, like `moduleName.spec.js`
+* Place your test files next to the tested modules using `*.test.js` or `*.spec.js` naming convention, like `moduleName.spec.js`.
 
     _Why:_
     > You don't want to dig through a folder structure to find a unit test. [read more...](https://hackernoon.com/structure-your-javascript-code-for-testability-9bc93d9c72dc)
@@ -282,9 +306,9 @@ Having a good guideline for creating commits and sticking to it makes working wi
 * Write testable code, avoid side effects, extract side effects, write pure functions
 
     _Why:_
-    > You want to test a business logic as a separate units. You have to "minimize the impact of randomness and non-deterministic processes on the reliability of your code". [read more...](https://medium.com/javascript-scene/tdd-the-rite-way-53c9b46f45e3)
+    > You want to test a business logic as separate units. You have to "minimize the impact of randomness and nondeterministic processes on the reliability of your code". [read more...](https://medium.com/javascript-scene/tdd-the-rite-way-53c9b46f45e3)
     
-    > A pure function is a function that always returns the same output for the same input. Conversely, an impure function is one that may have side effects or depends on conditions from the outside to produce a value. That makes it less predictable [read more...](https://hackernoon.com/structure-your-javascript-code-for-testability-9bc93d9c72dc)
+    > A pure function is a function that always returns the same output for the same input. Conversely, an impure function is one that may have side effects or depends on conditions from the outside to produce a value. That makes it less predictable. [read more...](https://hackernoon.com/structure-your-javascript-code-for-testability-9bc93d9c72dc)
 
 * Use a static type checker 
 
@@ -295,7 +319,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
 * Run tests locally before making any pull requests to `develop`.
 
     _Why:_
-    > You don't want to be the one who caused production-ready branch build to fail. Run your tests after your `rebase` and before pushing your feature-branch to remote repository.
+    > You don't want to be the one who caused production-ready branch build to fail. Run your tests after your `rebase` and before pushing your feature-branch to a remote repository.
 
 * Document your tests including instructions in the relevant section of your `README.md` file.
 
@@ -304,6 +328,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
 
 <a name="structure-and-naming"></a>
 ## 6. Structure and Naming
+![Structure and Naming](/images/folder-tree.png)
 * Organize your files around product features / pages / components, not roles. Also, place your test files next to their implementation.
 
 
@@ -345,19 +370,19 @@ Having a good guideline for creating commits and sticking to it makes working wi
 
     _Why:_
     >When you break down a config file for different purposes (database, API and so on); putting them in a folder with a very recognizable name such as `config` makes sense. Just remember not to make different config files for different environments. It doesn't scale cleanly, as more deploys of the app are created, new environment names are necessary.
-    Values to be used in config files should provided by environment variables. [read more...](https://medium.com/@fedorHK/no-config-b3f1171eecd5)
+    Values to be used in config files should be provided by environment variables. [read more...](https://medium.com/@fedorHK/no-config-b3f1171eecd5)
     
 
 * Put your scripts in a `./scripts` folder. This includes `bash` and `node` scripts.
 
     _Why:_
-    >It's very likely you may end up with more than one script, production build, development build, database feeders, database synchronisation and so on.
+    >It's very likely you may end up with more than one script, production build, development build, database feeders, database synchronization and so on.
     
 
 * Place your build output in a `./build` folder. Add `build/` to `.gitignore`.
 
     _Why:_
-    >Name it what you like, `dist` is also cool. But make sure that keep it consistent with your team. What gets in there is most likely generated  (bundled, compiled, transpiled) or moved there. What you can generate, your teammates should be able to generate too, so there is no point commiting them into your remote repository. Unless you specifically want to. 
+    >Name it what you like, `dist` is also cool. But make sure that keep it consistent with your team. What gets in there is most likely generated  (bundled, compiled, transpiled) or moved there. What you can generate, your teammates should be able to generate too, so there is no point committing them into your remote repository. Unless you specifically want to. 
 
 * Use `PascalCase' 'camelCase` for filenames and directory names. Use  `PascalCase`  only for Components.
 
@@ -370,6 +395,12 @@ Having a good guideline for creating commits and sticking to it makes working wi
 
 <a name="code-style"></a>
 ## 7. Code style
+
+![Code style](/images/code-style.png)
+
+<a name="code-style-check"></a>
+### 7.1 Some code style guidelines
+
 * Use stage-2 and higher JavaScript (modern) syntax for new projects. For old project stay consistent with existing syntax unless you intend to modernise the project.
 
     _Why:_
@@ -383,11 +414,11 @@ Having a good guideline for creating commits and sticking to it makes working wi
 * Use [ESLint - Pluggable JavaScript linter](http://eslint.org/) to enforce code style.
 
     _Why:_
-    > We simply prefer `eslint`, you don't have to. It has more number of rules supported, ability to configure the rules, and ability to add custom rules.
+    > We simply prefer `eslint`, you don't have to. It has more rules supported, the ability to configure the rules, and ability to add custom rules.
 
 * We use [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) for JavaScript, [Read more](https://www.gitbook.com/book/duk/airbnb-javascript-guidelines/details). Use the javascript style guide required by the project or your team.
 
-* We use [Flow type style check rules for ESLint.](https://github.com/gajus/eslint-plugin-flowtype) when using [FlowType](https://flow.org/).
+* We use [Flow type style check rules for ESLint](https://github.com/gajus/eslint-plugin-flowtype) when using [FlowType](https://flow.org/).
 
     _Why:_
     > Flow introduces few syntaxes that also need to follow certain code style and be checked.
@@ -395,7 +426,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
 * Use `.eslintignore` to exclude file or folders from code style check.
 
     _Why:_
-    > You don't have to pollute your code with `eslint-disable` comments whenever you need to exclude couple of files from style checking.
+    > You don't have to pollute your code with `eslint-disable` comments whenever you need to exclude a couple of files from style checking.
 
 * Remove any of your `eslint` disable comments before making a Pull Request.
 
@@ -405,7 +436,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
 * Depending on the size of the task use  `//TODO:` comments or open a ticket.
 
     _Why:_
-    > So then you can remind yourself and others about a small task (like refactoring a function, or updating a comment). For larger tasks  use `//TODO(#3456)` which is enforced by a lint rule and the number is an open ticket.
+    > So then you can remind yourself and others about a small task (like refactoring a function or updating a comment). For larger tasks use `//TODO(#3456)` which is enforced by a lint rule and the number is an open ticket.
 
 
 * Always comment and keep them relevant as code changes. Remove commented blocks of code.
@@ -418,7 +449,7 @@ Having a good guideline for creating commits and sticking to it makes working wi
     _Why:_
     > While your build process may(should) get rid of them, sometimes your source code may get handed over to another company/client and they may not share the same banter.
 
-* Make your names search-able with meaningful distinctions avoid shortened names. For functions Use long, descriptive names. A function name should be a verb or a verb phrase, and it needs to communicate its intention.
+* Make your names search-able with meaningful distinctions avoid shortened names. For functions use long, descriptive names. A function name should be a verb or a verb phrase, and it needs to communicate its intention.
 
     _Why:_
     > It makes it more natural to read the source code.
@@ -428,12 +459,36 @@ Having a good guideline for creating commits and sticking to it makes working wi
     _Why:_
     > It makes it more natural to read the source code.
 
+<a name="enforcing-code-style-standards"></a>
+### 7.2 Enforcing code style standards
+
+* Use a [.editorconfig](http://editorconfig.org/) file which helps developers define and maintain consistent coding styles between different editors and IDEs on the project.
+
+    _Why:_
+    > The EditorConfig project consists of a file format for defining coding styles and a collection of text editor plugins that enable editors to read the file format and adhere to defined styles. EditorConfig files are easily readable and they work nicely with version control systems.
+
+* Have your editor notify you about code style errors. Use [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier) and [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) with your existing ESLint configuration. [read more...](https://github.com/prettier/eslint-config-prettier#installation)
+
+* Consider using Git hooks.
+
+    _Why:_
+    > Git hooks greatly increase a developer's productivity. Make changes, commit and push to staging or production environments without the fear of breaking builds. [read more...](http://githooks.com/)
+
+* Use Prettier with a precommit hook.
+
+    _Why:_
+    > While `prettier` itself can be very powerful, it's not very productive to run it simply as an npm task alone each time to format code. This is where `lint-staged` (and `husky`) come into play. Read more on configuring `lint-staged` [here](https://github.com/okonet/lint-staged#configuration) and on configuring `husky` [here](https://github.com/typicode/husky).
+
+
 <a name="logging"></a>
 ## 8. Logging
+
+![Logging](/images/logging.png)
+
 * Avoid client-side console logs in production
 
     _Why:_
-    > Even though your build process can(should) get rid of them, but make sure your code style check gives your warning about console logs.
+    > Even though your build process can(should) get rid of them, make sure that your code style checker warns you about leftover console logs.
 
 * Produce readable production logging. Ideally use logging libraries to be used in production mode (such as [winston](https://github.com/winstonjs/winston) or
 [node-bunyan](https://github.com/trentm/node-bunyan)).
@@ -445,6 +500,9 @@ Having a good guideline for creating commits and sticking to it makes working wi
 <a name="api"></a>
 ## 9. API
 <a name="api-design"></a>
+
+![API](/images/api.png)
+
 ### 9.1 API design
 
 _Why:_
@@ -455,7 +513,7 @@ _Why:_
 
 
 * We mostly follow resource-oriented design. It has three main factors: resources, collection, and URLs.
-    * A resource has data, gets nested, and there are methods that operate against it
+    * A resource has data, gets nested, and there are methods that operate against it.
     * A group of resources is called a collection.
     * URL identifies the online location of resource or collection.
     
@@ -474,7 +532,7 @@ _Why:_
 * In the source code convert plurals to variables and properties with a List suffix.
 
     _Why_:
-    > Plural is nice in the URL but in the source code, it’s just too subtile and error-prone.
+    > Plural is nice in the URL but in the source code, it’s just too subtle and error-prone.
 
 * Always use a singular concept that starts with a collection and ends to an identifier:
 
@@ -493,7 +551,7 @@ _Why:_
 * Keep verbs out of your resource URLs.
 
     _Why:_
-    > Because if you use a verb for each resource operation you soon will have a huge list of URLs and no consistent pattern which makes it difficult for developers to learn. Plus we use verbs for something else
+    > Because if you use a verb for each resource operation you soon will have a huge list of URLs and no consistent pattern which makes it difficult for developers to learn. Plus we use verbs for something else.
 
 * Use verbs for non-resources. In this case, your API doesn't return any resources. Instead, you execute an operation and return the result. These **are not** CRUD (create, retrieve, update, and delete) operations:
 
@@ -507,12 +565,12 @@ _Why:_
 * The request body or response type is JSON then please follow `camelCase` for `JSON` property names to maintain the consistency.
     
     _Why:_
-    > This is a JavaScript project guideline, Where Programming language for generating JSON as well as Programming language for parsing JSON are assumed to be JavaScript. 
+    > This is a JavaScript project guideline, where the programming language for generating and parsing JSON is assumed to be JavaScript.
 
 * Even though a resource is a singular concept that is similar to an object instance or database record, you should not use your `table_name` for a resource name and `column_name` resource property.
 
     _Why:_
-    > Because your intention is to expose Resources, not your database schema details
+    > Because your intention is to expose Resources, not your database schema details.
 
 * Again, only use nouns in your URL when naming your resources and don’t try to explain their functionality.
 
@@ -524,13 +582,13 @@ _Why:_
     _How:_
     > `GET`: To retrieve a representation of a resource.
     
-    > `POST`: To create new resources and sub-resources
+    > `POST`: To create new resources and sub-resources.
    
-    > `PUT`: To update existing resources
+    > `PUT`: To update existing resources.
     
-    > `PATCH`: To update existing resources. It only updates the fields that were supplied, leaving the others alone
+    > `PATCH`: To update existing resources. It only updates the fields that were supplied, leaving the others alone.
     
-    > `DELETE`:	To delete existing resources
+    > `DELETE`:	To delete existing resources.
 
 
 * For nested resources, use the relation between them in the URL. For instance, using `id` to relate an employee to a company.
@@ -540,17 +598,17 @@ _Why:_
 
     _How:_
 
-    > `GET      /schools/2/students	` , should get the list of all students from school 2
+    > `GET      /schools/2/students	` , should get the list of all students from school 2.
 
-    > `GET      /schools/2/students/31`	, should get the details of student 31, which belongs to school 2
+    > `GET      /schools/2/students/31`	, should get the details of student 31, which belongs to school 2.
 
-    > `DELETE   /schools/2/students/31`	, should delete student 31, which belongs to school 2
+    > `DELETE   /schools/2/students/31`	, should delete student 31, which belongs to school 2.
 
-    > `PUT      /schools/2/students/31`	, should update info of student 31, Use PUT on resource-URL only, not collection
+    > `PUT      /schools/2/students/31`	, should update info of student 31, Use PUT on resource-URL only, not collection.
 
-    > `POST     /schools` , should create a new school and return the details of the new school created. Use POST on collection-URLs
+    > `POST     /schools` , should create a new school and return the details of the new school created. Use POST on collection-URLs.
 
-* Use a simple ordinal number for version with a `v` prefix (v1, v2). Move it all the way to the left in the URL so that it has the highest scope:
+* Use a simple ordinal number for a version with a `v` prefix (v1, v2). Move it all the way to the left in the URL so that it has the highest scope:
     ```
     http://api.domain.com/v1/schools/3/students	
     ```
@@ -560,7 +618,7 @@ _Why:_
 
 
 
-* Response messages must be self descriptive. A good error message response might look something like this:
+* Response messages must be self-descriptive. A good error message response might look something like this:
     ```json
     {
         "code": 1234,
@@ -592,7 +650,7 @@ _Why:_
     > developers depend on well-designed errors at the critical times when they are troubleshooting and resolving issues after the applications they've built using your APIs are in the hands of their users.
 
 
-    _Note: Keep security exception messages as generic as possible. For instance, Instead of saying ‘incorrect password’, you can reply back saying ‘invalid username or password’ so that we don’t unknowingly inform user that username was indeed correct and only password was incorrect._
+    _Note: Keep security exception messages as generic as possible. For instance, Instead of saying ‘incorrect password’, you can reply back saying ‘invalid username or password’ so that we don’t unknowingly inform user that username was indeed correct and only the password was incorrect._
 
 * Use only these 8 status codes to send with you response to describe whether **everything worked**,
 The **client app did something wrong** or The **API did something wrong**.
@@ -600,11 +658,11 @@ The **client app did something wrong** or The **API did something wrong**.
     _Which ones:_
     > `200 OK` response represents success for `GET`, `PUT` or `POST` requests.
 
-    > `201 Created` for when new instance is created. Creating a new instance, using `POST` method returns `201` status code.
+    > `201 Created` for when a new instance is created. Creating a new instance, using `POST` method returns `201` status code.
 
-    > `304 Not Modified` response is to minimize information transfer when the recipient already has cached representations
+    > `304 Not Modified` response is to minimize information transfer when the recipient already has cached representations.
 
-    > `400 Bad Request` for when the request was not processed, as the server could not understand what the client is asking for
+    > `400 Bad Request` for when the request was not processed, as the server could not understand what the client is asking for.
 
     > `401 Unauthorized` for when the request lacks valid credentials and it should re-request with the required credentials.
 
@@ -612,37 +670,37 @@ The **client app did something wrong** or The **API did something wrong**.
 
     > `404 Not Found` indicates that the requested resource was not found. 
 
-    > `500 Internal Server Error` indicates that the request is valid, but the server could not fulfil it due to some unexpected condition.
+    > `500 Internal Server Error` indicates that the request is valid, but the server could not fulfill it due to some unexpected condition.
 
     _Why:_
     > Most API providers use a small subset HTTP status codes. For example, the Google GData API uses only 10 status codes, Netflix uses 9, and Digg, only 8. Of course, these responses contain a body with additional information.There are over 70 HTTP status codes. However, most developers don't have all 70 memorized. So if you choose status codes that are not very common you will force application developers away from building their apps and over to wikipedia to figure out what you're trying to tell them. [read more...](https://apigee.com/about/blog/technology/restful-api-design-what-about-errors)
 
 
-* Provide total numbers of resources in your response
-* Accept `limit` and `offset` parameters
+* Provide total numbers of resources in your response.
+* Accept `limit` and `offset` parameters.
 
 * The amount of data the resource exposes should also be taken into account. The API consumer doesn't always need the full representation of a resource.Use a fields query parameter that takes a comma separated list of fields to include:
     ```
     GET /student?fields=id,name,age,class
     ```
-* Pagination, filtering and sorting don’t need to be supported from start for all resources. Document those resources that offer filtering and sorting.
+* Pagination, filtering, and sorting don’t need to be supported from start for all resources. Document those resources that offer filtering and sorting.
 
 <a name="api-security"></a>
 ### 9.2 API security
 These are some basic security best practices:
 
-* Don't use basic authentication. Authentication tokens must not be transmitted in the URL: `GET /users/123?token=asdf....`
+* Don't use basic authentication unless over a secure connection (HTTPS). Authentication tokens must not be transmitted in the URL: `GET /users/123?token=asdf....`
 
     _Why:_
     > Because Token, or user ID and password are passed over the network as clear text (it is base64 encoded, but base64 is a reversible encoding), the basic authentication scheme is not secure. [read more...](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)
 
-* Tokens must be transmitted using the Authorization header on every request: `Authorization: Bearer xxxxxx, Extra yyyyy`
+* Tokens must be transmitted using the Authorization header on every request: `Authorization: Bearer xxxxxx, Extra yyyyy`.
 
 * Authorization Code should be short-lived.
 
 * Reject any non-TLS requests by not responding to any HTTP request to avoid any insecure data exchange. Respond to HTTP requests by `403 Forbidden`.
 
-* Consider using Rate Limiting
+* Consider using Rate Limiting.
 
     _Why:_
     > To protect your APIs from bot threats that call your API thousands of times per hour. You should consider implementing rate limit early on.
@@ -653,7 +711,7 @@ These are some basic security best practices:
 
 * All the data exchanged with the ReST API must be validated by the API.
 
-* Serialize your JSON 
+* Serialize your JSON.
 
     _Why:_
     > A key concern with JSON encoders is preventing arbitrary JavaScript remote code execution within the browser... or, if you're using node.js, on the server. It's vital that you use a proper JSON serializer to encode user-supplied data properly to prevent the execution of user-supplied input on the browser.
@@ -663,12 +721,13 @@ These are some basic security best practices:
     _Why:_
     > For instance, accepting the `application/x-www-form-urlencoded` mime type allows the attacker to create a form and trigger a simple POST request. The server should never assume the Content-Type. A lack of Content-Type header or an unexpected Content-Type header should result in the server rejecting the content with a `4XX` response.
 
+* Check the API Security Checklist Project. [read more...](https://github.com/shieldfy/API-Security-Checklist)
 
 <a name="api-documentation"></a>
 ### 9.3 API documentation
 * Fill the `API Reference` section in [README.md template](./README.sample.md) for API.
-* Describe API authentication methods with a code sample
-* Explaining The URL Structure (path only, no root URL) including The request type (Method)
+* Describe API authentication methods with a code sample.
+* Explaining The URL Structure (path only, no root URL) including The request type (Method).
 
 For each endpoint explain:
 * URL Params If URL Params exist, specify them in accordance with name mentioned in URL section:
@@ -678,7 +737,7 @@ For each endpoint explain:
     Optional: photo_id=[alphanumeric]
     ```
 
-* If the request type is POST, provide a working examples. URL Params rules apply here too. Separate the section into Optional and Required.
+* If the request type is POST, provide working examples. URL Params rules apply here too. Separate the section into Optional and Required.
 
 * Success Response, What should be the status code and is there any return data? This is useful when people need to know what their callbacks should expect:
 
@@ -687,7 +746,7 @@ For each endpoint explain:
     Content: { id : 12 }
     ```
 
-* Error Response, Most endpoints have many ways to fail. From unauthorised access, to wrongful parameters etc. All of those should be listed here. It might seem repetitive, but it helps prevent assumptions from being made. For example
+* Error Response, Most endpoints have many ways to fail. From unauthorized access to wrongful parameters etc. All of those should be listed here. It might seem repetitive, but it helps prevent assumptions from being made. For example
     ```json
     {
         "code": 403,
@@ -701,7 +760,9 @@ For each endpoint explain:
 
 <a name="licensing"></a>
 ## 10. Licensing
-Make sure you use resources that you have the rights to use. If you use libraries, remember to look for MIT, Apache or BSD but if you modify them, then take a look into licence details. Copyrighted images and videos may cause legal problems.
+![Licensing](/images/licensing.png)
+
+Make sure you use resources that you have the rights to use. If you use libraries, remember to look for MIT, Apache or BSD but if you modify them, then take a look at the license details. Copyrighted images and videos may cause legal problems.
 
 
 ---
@@ -713,4 +774,6 @@ Sources:
 [Atlassian Git tutorials](https://www.atlassian.com/git/tutorials),
 [Apigee](https://apigee.com/about/blog),
 [Wishtack](https://blog.wishtack.com)
+
+Icons by [icons8](https://icons8.com/)
 
